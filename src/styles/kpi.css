@@ -1,0 +1,155 @@
+/* KPI-Ansichten: Standard-/Management-Kennzahlen, Projektreiter, Management-Seite */
+
+:root { --heat: #0f4a94; --heat-ink: #ffffff; --h1: 12%; --h2: 28%; --h3: 45%; --h4: 62%; }
+:root[data-theme='dark'] { --heat: #7db8ff; --heat-ink: #06121f; --h1: 10%; --h2: 22%; --h3: 36%; --h4: 50%; }
+
+h3 { font-size: 13px; margin: 0 0 8px; color: var(--ink-2); }
+.wrap { white-space: normal; min-width: 180px; max-width: 46ch; }
+.table-note { margin-top: 12px; }
+.table td.num { white-space: nowrap; }
+.linklike { padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.linklike.strong { font-weight: 600; }
+.linklike:hover { color: var(--accent-strong); text-decoration: underline; }
+.btn.more { margin-top: 8px; }
+
+/* Reiter wischbar, wenn sie nicht in eine Zeile passen */
+.tabs.tabs-scroll { max-width: 100%; overflow-x: auto; scrollbar-width: thin; }
+.tabs.tabs-scroll button { flex: none; }
+
+/* ---------- KPI-Abschnitte & -Karten ---------- */
+.kpi-section { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.kpi-section-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.kpi-section-icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; background: var(--surface); border: 1px solid var(--line); color: var(--ink-2); flex: none; }
+.kpi-section-head h2 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 16px; }
+.kpi-section-action { margin-left: auto; }
+.kpi-tag { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600; letter-spacing: 0; background: var(--surface-2); border: 1px solid var(--line); color: var(--ink-2); }
+/* Management-Kennzahlen sind als eigener, getönter Bereich abgesetzt */
+.kpi-section.management { padding: 16px; border-radius: calc(var(--radius) + 4px); background: color-mix(in srgb, var(--accent-soft) 55%, var(--bg)); border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line)); }
+.kpi-section.management .kpi-section-icon, .kpi-section.management .kpi-tag, .kpi-tag.management { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 35%, transparent); color: var(--accent-strong); }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 12px; }
+/* Projektansicht: je sechs Karten → 3 × 2 statt 4 + 2 */
+.kpi-grid.cols-3 { grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+.kpi-card { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.kpi-card header { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px 10px; flex-wrap: wrap; }
+.kpi-title { display: inline-flex; align-items: center; gap: 7px; min-height: 24px; color: var(--ink-2); font-size: 13px; font-weight: 600; }
+.kpi-value { font-size: 28px; font-weight: 650; letter-spacing: -0.02em; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.kpi-value small { margin-left: 7px; font-size: 13px; font-weight: 400; letter-spacing: 0; color: var(--muted); }
+.kpi-formula { font-size: 12px; color: var(--muted); }
+.kpi-facts { margin: auto 0 0; padding-top: 8px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
+.kpi-facts div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 12.5px; }
+.kpi-facts dt { color: var(--ink-2); }
+.kpi-facts dd { margin: 0; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* ---------- Anteilsbalken (Ampelverteilung, NPS) ---------- */
+.sharebar { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.sharebar-track { display: flex; gap: 2px; height: 12px; }
+.sharebar-track .seg { min-width: 4px; border-radius: 2px; }
+.sharebar-track .seg:first-child { border-radius: 4px 2px 2px 4px; }
+.sharebar-track .seg:last-child { border-radius: 2px 4px 4px 2px; }
+.sharebar-track .seg:only-child { border-radius: 4px; }
+.sharebar-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12.5px; color: var(--ink-2); }
+.seg-label { display: inline-flex; align-items: center; gap: 5px; }
+.seg-label b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.seg.seg-gruen, .seg.seg-promotor, .seg-promotor .swatch { background: var(--good); }
+.seg.seg-gelb { background: var(--warn); }
+.seg.seg-rot, .seg.seg-detraktor, .seg-detraktor .swatch { background: var(--crit); }
+.seg.seg-neutral, .seg.seg-passiv, .seg-passiv .swatch { background: var(--axis); }
+.seg.seg-leer { background: var(--surface-2); }
+.seg-label.seg-gruen .icon { color: var(--good); }
+.seg-label.seg-gelb .icon { color: color-mix(in srgb, var(--warn) 70%, var(--ink)); }
+.seg-label.seg-rot .icon { color: var(--crit); }
+.tile .sharebar { margin-top: 12px; }
+
+/* ---------- Kritischer Pfad ---------- */
+.kp-mark { display: inline-flex; align-items: center; gap: 2px; height: 16px; padding: 0 4px; margin-right: 5px; border: 1px solid var(--axis); border-radius: 5px; font-size: 10px; font-weight: 700; line-height: 1; letter-spacing: 0.02em; color: var(--ink-2); vertical-align: 1px; }
+td .kp-mark { margin: 0 0 0 4px; }
+/* zusätzlich zur Marke am Namen: Kontur um den Soll-Balken (Form, nicht Farbe) */
+.gantt-row.critical .gantt-bar.soll { outline: 1.5px solid var(--ink); outline-offset: 1.5px; }
+.gantt-row.critical .gantt-ms.soll { box-shadow: 0 0 0 2px var(--surface), 0 0 0 3.5px var(--ink); }
+
+/* ---------- Tabellen der Projektreiter ---------- */
+.badge.eskalation { background: color-mix(in srgb, var(--crit) 14%, transparent); color: var(--ink); }
+.badge.eskalation .icon { color: var(--crit); }
+td .badge.eskalation { margin-top: 4px; }
+.table tr.eskaliert td { background: color-mix(in srgb, var(--crit) 5%, transparent); }
+.table tr.closed td { color: var(--muted); }
+.pivot td.pair { line-height: 1.35; white-space: nowrap; }
+.pivot td.pair span { display: block; }
+.pivot td.pair span::after { content: ''; display: inline-block; width: 6px; height: 6px; margin-left: 6px; border-radius: 2px; background: var(--soll); vertical-align: 1px; }
+.pivot td.pair span.pair-ist::after { background: var(--ist); }
+.pivot td.pair span.muted::after { content: none; }
+.pivot th .now-mark { font-weight: 400; }
+.feedback-invite { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 40px 24px; }
+.feedback-invite h2 { font-size: 18px; }
+.feedback-invite p { max-width: 56ch; }
+.feedback-invite .btn { margin-top: 8px; }
+
+/* ---------- Management-Seite ---------- */
+.mgmt-block > .card-head { align-items: flex-start; }
+.mgmt-title { display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
+.mgmt-nr { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; background: var(--accent-soft); color: var(--accent-strong); font-weight: 700; font-size: 13px; flex: none; font-variant-numeric: tabular-nums; }
+.tiles.inner, .grid-2.inner { margin-bottom: 16px; }
+.tiles.inner .tile { background: var(--surface-2); border-color: transparent; box-shadow: none; }
+.dualbar-nums.single { line-height: 1.5; font-size: 12.5px; min-width: 44px; }
+.risk-layout { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: start; }
+.risk-layout > .table-wrap { margin-right: 0; padding-right: 0; }
+.nps-summary { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px 32px; align-items: center; margin-bottom: 16px; padding: 16px 18px; border-radius: 12px; background: var(--surface-2); }
+.nps-score { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.nps-score .tile-value { font-size: 40px; line-height: 1; margin: 0; font-variant-numeric: tabular-nums; }
+
+/* Risikomatrix 5×5 */
+.riskmatrix-wrap { display: flex; flex-direction: column; gap: 10px; }
+.riskmatrix { border-collapse: separate; border-spacing: 3px; font-variant-numeric: tabular-nums; }
+.riskmatrix th { font-size: 11.5px; font-weight: 600; color: var(--muted); padding: 0 4px; text-align: center; }
+.riskmatrix td { width: 40px; height: 36px; border-radius: 6px; text-align: center; font-weight: 700; color: var(--ink); }
+.riskmatrix .axis-y { width: 16px; padding: 0; }
+.riskmatrix .axis-y span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; }
+.riskmatrix .axis-x { padding-top: 2px; }
+.rm-niedrig { background: color-mix(in srgb, var(--good) 12%, var(--surface)); }
+.rm-mittel { background: color-mix(in srgb, var(--warn) 24%, var(--surface)); }
+.rm-hoch { background: color-mix(in srgb, var(--crit) 18%, var(--surface)); }
+.riskmatrix td.filled { box-shadow: inset 0 0 0 1.5px var(--ink-2); }
+.rm-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; color: var(--ink-2); }
+.rm-legend span { display: inline-flex; align-items: center; gap: 5px; }
+.rm-legend i { width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--line); }
+
+/* Heatmap Kapazität: eine Farbe, hell → dunkel */
+.heatmap { width: 100%; border-collapse: separate; border-spacing: 3px; font-variant-numeric: tabular-nums; }
+.heatmap thead th { padding: 4px 6px; font-size: 12px; font-weight: 600; color: var(--muted); text-align: center; white-space: nowrap; }
+.heatmap thead th:first-child, .heatmap tbody th { text-align: left; }
+.heatmap thead th small { display: block; font-weight: 400; font-size: 10.5px; }
+.heatmap thead th.now { color: var(--ink); }
+.heatmap tbody th { padding: 4px 12px 4px 0; font-weight: 600; min-width: 190px; }
+.heat-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.heat-head .small { font-weight: 400; }
+.heat-actions { display: inline-flex; flex: none; }
+.heat-actions .btn { width: 30px; height: 30px; }
+.heatmap td { min-width: 68px; height: 40px; padding: 0 8px; border-radius: 6px; text-align: center; font-size: 12.5px; font-weight: 600; white-space: nowrap; color: var(--ink); }
+.heatmap td.num { text-align: right; padding-right: 0; font-weight: 400; }
+.heat-leer { background: var(--surface-2); font-weight: 400; }
+.heat-1 { background: color-mix(in srgb, var(--heat) var(--h1), var(--surface)); }
+.heat-2 { background: color-mix(in srgb, var(--heat) var(--h2), var(--surface)); }
+.heat-3 { background: color-mix(in srgb, var(--heat) var(--h3), var(--surface)); }
+.heat-4 { background: color-mix(in srgb, var(--heat) var(--h4), var(--surface)); }
+.heatmap td.heat-5, .heat-legend i.heat-5 { background: var(--heat); color: var(--heat-ink); }
+.heat-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin-top: 12px; font-size: 12px; color: var(--ink-2); }
+.heat-legend span { display: inline-flex; align-items: center; gap: 5px; }
+.heat-legend i { width: 14px; height: 14px; border-radius: 4px; }
+.heat-legend .muted { margin-right: auto; }
+
+@media (max-width: 900px) {
+  .risk-layout { grid-template-columns: minmax(0, 1fr); }
+  .risk-layout > .table-wrap { margin-right: -20px; padding-right: 20px; }
+}
+@media (max-width: 640px) {
+  .kpi-section.management { padding: 12px; }
+  .kpi-value { font-size: 24px; }
+  .nps-summary { grid-template-columns: minmax(0, 1fr); }
+  .heatmap tbody th { min-width: 150px; }
+  .risk-layout > .table-wrap { margin-right: -16px; padding-right: 16px; }
+}
+
+/* Hinweis innerhalb eines KPI-Blocks (z. B. fehlende Auftragswerte) */
+.kpi-note { display: flex; align-items: flex-start; gap: 8px; margin: 0 0 16px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); color: var(--ink-2); font-size: 13px; }
+.kpi-note svg { flex: none; margin-top: 2px; }

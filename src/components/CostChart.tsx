@@ -18,14 +18,16 @@ export function CostChart({ costs, budget }: { costs: Cost[]; budget: number }) 
   const [hover, setHover] = useState<number | null>(null);
 
   useEffect(() => {
-    const el = wrap.current!;
+    const el = wrap.current;
+    if (!el) return;
     const ro = new ResizeObserver(() => setWidth(el.clientWidth));
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
 
   const pts = costCurve(costs);
-  if (pts.length < 2) return <p className="empty">Noch keine Kosten erfasst.</p>;
+  // Der Container (mit dem ResizeObserver) bleibt auch im Leerzustand stehen
+  if (pts.length < 2) return <div ref={wrap}><p className="empty">Noch keine Kosten erfasst.</p></div>;
 
   const H = 280;
   const m = { t: 16, r: 20, b: 28, l: 64 };

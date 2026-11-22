@@ -97,16 +97,18 @@ export function projectMetrics(p: Project, tasks: Task[], costs: Cost[], todaySt
       if (toDay(c.datum) <= today) pv += c.betrag;
     }
   }
-  const bac = p.budget;
+  const bac = p.budget ?? 0;
   const ev = bac * istPct;
-  const spi = sollPct > 0 ? istPct / sollPct : null;
+  // Ohne Terminplan ist der Ist-Fortschritt unbekannt – dann keine Terminleistung statt SPI 0
+  const spi = weight > 0 && sollPct > 0 ? istPct / sollPct : null;
   const cpi = ac > 0 && ev > 0 ? ev / ac : null;
   // Prognose: Rest wird mit bisheriger Kosteneffizienz abgewickelt (mind. bereits angefallene Kosten)
   const eac = Math.max(ac, cpi ? bac / cpi : bac);
 
   const notStarted = p.status === 'geplant' && ac === 0 && istPct === 0;
   const terminAmpel: Ampel = notStarted && delayDays <= 0 ? 'neutral' : delayDays <= 3 ? 'gruen' : delayDays <= 14 ? 'gelb' : 'rot';
-  const over = bac > 0 ? eac / bac - 1 : 0;
+  // Kosten ohne Budget sind vollständig ungedeckt
+  const over = bac > 0 ? eac / bac - 1 : ac > 0 ? Infinity : 0;
   const kostenAmpel: Ampel = notStarted ? 'neutral' : over <= 0.02 ? 'gruen' : over <= 0.1 ? 'gelb' : 'rot';
 
   return { sollPct, istPct, delayDays, forecastEnd, bac, pv, planTotal, ac, ev, spi, cpi, eac, terminAmpel, kostenAmpel };

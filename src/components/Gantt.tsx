@@ -1,6 +1,8 @@
 import { useState, type MouseEvent } from 'react';
 import { toDay, todayIso } from '../calc';
 import { date, month } from '../format';
+import { Icon } from './ui';
+import '../styles/kpi.css';
 
 export interface GanttRow {
   id: number;
@@ -14,6 +16,8 @@ export interface GanttRow {
   milestone?: boolean;
   /** Ist-Fortschritt 0..100 */
   pct: number;
+  /** liegt auf dem kritischen Pfad – Kennzeichnung über Marke am Namen und Kontur, nicht über Farbe allein */
+  critical?: boolean;
 }
 
 const DAY = 86400000;
@@ -52,7 +56,10 @@ export function Gantt({ rows, onRowClick }: { rows: GanttRow[]; onRowClick?: (id
         <div className="gantt-head" />
         {rows.map((r) => (
           <div key={r.id} className={`gantt-label ${onRowClick ? 'clickable' : ''}`} onClick={() => onRowClick?.(r.id)}>
-            <span className="gantt-name">{r.label}</span>
+            <span className="gantt-name" title={r.critical ? `${r.label} – kritischer Pfad` : r.label}>
+              {r.critical && <span className="kp-mark" aria-label="Kritischer Pfad"><Icon name="flag" size={12} />KP</span>}
+              {r.label}
+            </span>
             {r.sub && <span className="gantt-sub">{r.sub}</span>}
           </div>
         ))}
@@ -70,7 +77,7 @@ export function Gantt({ rows, onRowClick }: { rows: GanttRow[]; onRowClick?: (id
             const is = r.istStart ? toDay(r.istStart) : null;
             const ie = r.istEnd ? toDay(r.istEnd) : is !== null ? Math.max(today, is) : null;
             return (
-              <div key={r.id} className="gantt-row" onMouseMove={move(r)}>
+              <div key={r.id} className={`gantt-row ${r.critical ? 'critical' : ''}`} onMouseMove={move(r)}>
                 {r.milestone ? (
                   <>
                     <i className="gantt-ms soll" style={{ left: `${x(e)}%` }} />
@@ -90,6 +97,7 @@ export function Gantt({ rows, onRowClick }: { rows: GanttRow[]; onRowClick?: (id
           {tip && (
             <div className="tooltip" style={{ left: tip.x, top: tip.y }} data-flip={tip.x > 320 ? '' : undefined}>
               <strong>{tip.row.label}</strong>
+              {tip.row.critical && <div><Icon name="flag" size={12} />Kritischer Pfad</div>}
               {tip.row.milestone ? (
                 <>
                   <div><i className="swatch soll" />Soll <b>{date(tip.row.sollEnd)}</b></div>

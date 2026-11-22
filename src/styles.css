@@ -112,11 +112,7 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--a
 .card-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; min-height: 36px; }
 .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
 .tile { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 18px; }
-.tile-label { display: flex; align-items: center; gap: 7px; color: var(--ink-2); font-size: 13px; }
-.tile-label::before { content: none; width: 8px; height: 8px; border-radius: 50%; }
-.tile-gruen .tile-label::before { content: ''; background: var(--good); }
-.tile-gelb .tile-label::before { content: ''; background: var(--warn); }
-.tile-rot .tile-label::before { content: ''; background: var(--crit); }
+.tile-label { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 8px; min-height: 24px; color: var(--ink-2); font-size: 13px; }
 .tile-value { font-size: 26px; font-weight: 650; letter-spacing: -0.02em; line-height: 1.25; margin-top: 4px; }
 .tile-sub { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
 
@@ -255,9 +251,96 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--a
 .modal-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
 .banner { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 6px 8px 6px 16px; border-radius: 12px; background: color-mix(in srgb, var(--crit) 12%, var(--surface)); border: 1px solid color-mix(in srgb, var(--crit) 40%, transparent); font-weight: 600; }
 
+/* Checkboxen & Feldhinweise */
+input[type='checkbox'] { width: 18px; height: 18px; padding: 0; margin: 0; flex: none; accent-color: var(--accent); cursor: pointer; }
+input[type='checkbox']:disabled { cursor: default; opacity: 0.55; }
+input[type='checkbox']:focus { box-shadow: none; }
+input[type='checkbox']:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.hint { display: block; font-size: 12px; font-weight: 400; color: var(--muted); }
+label.check, .form-grid label.check { display: flex; flex-direction: row; align-items: flex-start; gap: 10px; cursor: pointer; }
+.form-grid label.check input { width: 18px; margin-top: 1px; }
+.form-grid label.check span { font-size: 14px; color: var(--ink); }
+
+/* Navigation & Benutzermenü */
+.nav { display: flex; gap: 2px; flex: 1; min-width: 0; margin-left: 12px; }
+.nav a { display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 12px; border-radius: 10px; color: var(--ink-2); font-weight: 600; text-decoration: none; white-space: nowrap; }
+.nav a:hover { background: var(--surface-2); color: var(--ink); }
+.nav a.active { background: var(--accent-soft); color: var(--accent-strong); }
+.topbar .actions { flex-wrap: nowrap; gap: 4px; }
+.usermenu { position: relative; margin-left: 4px; }
+.usermenu-btn { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 8px 0 4px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); font: inherit; cursor: pointer; }
+.usermenu-btn:hover { border-color: var(--axis); }
+.avatar { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-strong); font-size: 12px; font-weight: 700; }
+.usermenu-text { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.2; max-width: 160px; }
+.usermenu-text strong, .usermenu-text small { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.usermenu-text strong { font-size: 13px; }
+.usermenu-text small { font-size: 11.5px; color: var(--muted); }
+.usermenu-pop { position: absolute; right: 0; top: calc(100% + 8px); z-index: 15; min-width: 230px; padding: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.35); }
+.usermenu-head { display: flex; flex-direction: column; padding: 8px 10px 10px; margin-bottom: 6px; border-bottom: 1px solid var(--line); }
+.usermenu-pop [role='menuitem'] { display: flex; align-items: center; gap: 10px; width: 100%; height: 38px; padding: 0 10px; border: 0; border-radius: 9px; background: none; color: var(--ink); font: inherit; font-weight: 600; text-align: left; text-decoration: none; cursor: pointer; }
+.usermenu-pop [role='menuitem']:hover { background: var(--surface-2); }
+.usermenu-pop .show-sm { display: none; }
+.banner.ok { background: color-mix(in srgb, var(--good) 10%, var(--surface)); border-color: color-mix(in srgb, var(--good) 40%, transparent); }
+.banner.ok span { display: inline-flex; align-items: center; gap: 8px; }
+.banner.ok .icon { color: var(--good); }
+
+/* Hinweis-Karten (kein Zugriff, nicht gefunden) */
+.notice { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 48px 24px; max-width: 560px; width: 100%; margin: 32px auto; }
+.notice h2 { font-size: 18px; }
+.notice .btn { margin-top: 8px; }
+.notice-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--surface-2); color: var(--ink-2); }
+
+/* Anmeldung & Ersteinrichtung */
+.auth-page {
+  position: relative; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 24px 16px;
+  background:
+    radial-gradient(60vmax 60vmax at 12% -10%, color-mix(in srgb, #2cc5b4 20%, transparent), transparent 60%),
+    radial-gradient(55vmax 55vmax at 105% 110%, color-mix(in srgb, #2a78d6 18%, transparent), transparent 60%),
+    var(--bg);
+}
+.auth-theme { position: absolute; top: 12px; right: 12px; }
+.auth-card { width: min(420px, 100%); padding: 30px 30px 28px; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; box-shadow: 0 1px 2px rgba(15, 23, 32, 0.05), 0 28px 60px -28px rgba(15, 23, 32, 0.35); }
+.auth-brand { margin-bottom: 24px; }
+.auth-card h1 { font-size: 24px; }
+.auth-intro { color: var(--ink-2); margin: 6px 0 20px; }
+.auth-form { display: flex; flex-direction: column; gap: 14px; }
+.auth-form label { display: flex; flex-direction: column; gap: 6px; }
+.auth-form label > span { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+/* 16px verhindert das automatische Hineinzoomen auf iOS */
+.auth-form input { width: 100%; height: 44px; font-size: 16px; border-radius: 12px; }
+.auth-submit { width: 100%; height: 44px; justify-content: center; border-radius: 12px; font-size: 15px; margin-top: 4px; }
+.auth-error, .auth-note { display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; border-radius: 12px; font-weight: 600; }
+.auth-error .icon, .auth-note .icon { margin-top: 2px; }
+.auth-error { background: color-mix(in srgb, var(--crit) 12%, var(--surface)); border: 1px solid color-mix(in srgb, var(--crit) 40%, transparent); }
+.auth-error .icon { color: var(--crit); }
+.auth-note { background: var(--accent-soft); }
+.auth-note .icon { color: var(--accent-strong); }
+.auth-foot { text-align: center; }
+
+@media (max-width: 1080px) {
+  .hide-md { display: none; }
+}
+/* Schmale Bildschirme: Navigation als eigene, wischbare Zeile unter der Kopfzeile */
+@media (max-width: 820px) {
+  .topbar { flex-wrap: wrap; row-gap: 6px; padding-bottom: 6px; }
+  .nav { order: 3; flex: 0 0 100%; margin: 0 -4px; overflow-x: auto; scrollbar-width: none; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { flex: 1 0 auto; justify-content: center; }
+}
+/* Handy: ohne Symbole passen alle Menüpunkte in die Zeile */
+@media (max-width: 520px) {
+  .nav a { padding: 0 8px; }
+  .nav a svg { display: none; }
+}
+@media (max-width: 380px) {
+  .brand-name { display: none; }
+  .auth-card { padding: 24px 20px; }
+}
+
 @media (max-width: 640px) {
   h1 { font-size: 22px; }
   .hide-sm { display: none; }
+  .usermenu-pop .show-sm { display: flex; }
   .form-grid { grid-template-columns: 1fr; }
   .card { padding: 16px; }
   .table-wrap { margin: 0 -16px -8px; padding: 0 16px; }

@@ -16,6 +16,30 @@ const paths: Record<string, ReactNode> = {
   download: <path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14" />,
   upload: <path d="M12 16V5m0 0L8 9m4-4l4 4M5 20h14" />,
   close: <path d="M6 6l12 12M18 6L6 18" />,
+  user: <path d="M12 12a4 4 0 100-8 4 4 0 000 8zm-7 8c0-3.3 3.1-5.5 7-5.5s7 2.2 7 5.5" />,
+  users: <path d="M9 12a3.5 3.5 0 100-7 3.5 3.5 0 000 7zm-6 7c0-2.8 2.7-4.5 6-4.5s6 1.700 6 4.500M16 5.200a3.500 3.500 0 010 6.600M17.500 14.800c2.100.500 3.500 2 3.500 4.200" />,
+  lock: <path d="M7 11V8a5 5 0 0110 0v3M6 11h12v9H6z" />,
+  key: <path d="M15 7a4 4 0 11-3.500 6H9v2H7v2H4v-3l5.200-5.200A4 4 0 0115 7zm.500 3.500v.010" />,
+  logout: <path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9" />,
+  file: <path d="M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5" />,
+  shield: <path d="M12 3l7 3v6c0 4.500-3 7.500-7 9-4-1.500-7-4.500-7-9V6l7-3zM9 12l2 2 4-4" />,
+  chart: <path d="M4 20V4m0 16h16M8 16v-5m4 5V8m4 8v-3" />,
+  grid: <path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" />,
+  chevron: <path d="M6 9l6 6 6-6" />,
+  undo: <path d="M9 6L5 10l4 4M5 10h9a5 5 0 010 10h-3" />,
+  save: <path d="M5 4h11l3 3v13H5zM8 4v5h7V4M8 20v-6h8v6" />,
+  info: <path d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 8v5m0-8.500v.500" />,
+  calendar: <path d="M5 6h14v14H5zM5 10h14M9 3v4m6-4v4" />,
+  clock: <path d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 4v5l3 2" />,
+  flag: <path d="M6 21V4m0 1h11l-2 4 2 4H6" />,
+  star: <path d="M12 3.500l2.600 5.400 5.900.800-4.300 4.100 1 5.800-5.200-2.800-5.200 2.800 1-5.800-4.300-4.100 5.900-.800z" />,
+  euro: <path d="M18 6.500A7 7 0 007 12a7 7 0 0011 5.500M4 10h9M4 14h9" />,
+  trend: <path d="M4 17l5-5 4 4 7-8m0 0h-5m5 0v5" />,
+  target: <path d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 5a4 4 0 100 8 4 4 0 000-8zm0 3.500v1" />,
+  search: <path d="M11 4a7 7 0 100 14 7 7 0 000-14zm5 12l4 4" />,
+  eye: <path d="M2.500 12S6 5.500 12 5.500 21.500 12 21.500 12 18 18.500 12 18.500 2.500 12 2.500 12zm9.500-3a3 3 0 100 6 3 3 0 000-6z" />,
+  print: <path d="M7 9V4h10v5M7 17H4v-8h16v8h-3M7 14h10v6H7z" />,
+  forward: <path d="M9 5l7 7-7 7" />,
 };
 
 export function Icon({ name, size = 16 }: { name: keyof typeof paths | string; size?: number }) {
@@ -48,8 +72,8 @@ export function StatusBadge({ status }: { status: Status }) {
 
 export function Tile({ label, value, sub, ampel }: { label: string; value: ReactNode; sub?: ReactNode; ampel?: Ampel }) {
   return (
-    <div className={`tile ${ampel ? `tile-${ampel}` : ''}`}>
-      <div className="tile-label">{label}</div>
+    <div className="tile">
+      <div className="tile-label"><span>{label}</span>{ampel && ampel !== 'neutral' && <AmpelBadge ampel={ampel} />}</div>
       <div className="tile-value">{value}</div>
       {sub && <div className="tile-sub">{sub}</div>}
     </div>
@@ -103,15 +127,23 @@ export function Modal({ title, onClose, children }: { title: string; onClose: ()
 export interface Field {
   key: string;
   label: string;
-  type?: 'text' | 'date' | 'number' | 'select' | 'textarea';
+  /** `checkbox` liefert 0/1, `number` eine Zahl (leer bleibt leer). */
+  type?: 'text' | 'date' | 'number' | 'select' | 'textarea' | 'checkbox' | 'password' | 'email' | 'month';
   options?: { value: string; label: string }[];
   suggestions?: string[];
   required?: boolean;
   wide?: boolean;
+  hint?: string;
+  min?: number;
+  max?: number;
+  step?: number;
+  autoComplete?: string;
   hidden?: (values: Record<string, unknown>) => boolean;
 }
 
 type Values = Record<string, unknown>;
+
+const isOn = (v: unknown) => v === true || v === 1 || v === '1';
 
 export function FormModal({ title, fields, initial, onSave, onClose }: { title: string; fields: Field[]; initial: Values; onSave: (v: Values) => Promise<void>; onClose: () => void }) {
   const [values, setValues] = useState<Values>(initial);
@@ -124,7 +156,12 @@ export function FormModal({ title, fields, initial, onSave, onClose }: { title: 
     setBusy(true);
     setError('');
     try {
-      await onSave(values);
+      const out = { ...values };
+      for (const f of fields) {
+        if (f.type === 'checkbox') out[f.key] = isOn(out[f.key]) ? 1 : 0;
+        else if (f.type === 'number' && out[f.key] !== '' && out[f.key] != null) out[f.key] = Number(out[f.key]);
+      }
+      await onSave(out);
       onClose();
     } catch (err) {
       setError((err as Error).message);
@@ -139,6 +176,12 @@ export function FormModal({ title, fields, initial, onSave, onClose }: { title: 
           {fields.filter((f) => !f.hidden?.(values)).map((f, i) => {
             const v = (values[f.key] ?? '') as string | number;
             const common = { id: `f-${f.key}`, required: f.required, autoFocus: i === 0 };
+            if (f.type === 'checkbox') return (
+              <label key={f.key} className={`check ${f.wide ? 'wide' : ''}`} htmlFor={common.id}>
+                <input id={common.id} type="checkbox" checked={isOn(values[f.key])} onChange={(e) => set(f.key, e.target.checked ? 1 : 0)} />
+                <span>{f.label}{f.hint && <small className="hint">{f.hint}</small>}</span>
+              </label>
+            );
             return (
               <label key={f.key} className={f.wide ? 'wide' : ''} htmlFor={common.id}>
                 <span>{f.label}{f.required && ' *'}</span>
@@ -150,11 +193,12 @@ export function FormModal({ title, fields, initial, onSave, onClose }: { title: 
                   <textarea {...common} rows={3} value={v} onChange={(e) => set(f.key, e.target.value)} />
                 ) : (
                   <>
-                    <input {...common} type={f.type ?? 'text'} step={f.type === 'number' ? 'any' : undefined} value={v} list={f.suggestions ? `l-${f.key}` : undefined}
+                    <input {...common} type={f.type ?? 'text'} step={f.type === 'number' ? f.step ?? 'any' : undefined} min={f.min} max={f.max} autoComplete={f.autoComplete} value={v} list={f.suggestions ? `l-${f.key}` : undefined}
                       onChange={(e) => set(f.key, e.target.value)} />
                     {f.suggestions && <datalist id={`l-${f.key}`}>{f.suggestions.map((s) => <option key={s} value={s} />)}</datalist>}
                   </>
                 )}
+                {f.hint && <small className="hint">{f.hint}</small>}
               </label>
             );
           })}
@@ -166,5 +210,19 @@ export function FormModal({ title, fields, initial, onSave, onClose }: { title: 
         </div>
       </form>
     </Modal>
+  );
+}
+
+/** Farbschema-Umschalter; merkt sich die Wahl im Browser. */
+export function ThemeToggle() {
+  const [dark, setDark] = useState(() => document.documentElement.dataset.theme === 'dark');
+  useEffect(() => {
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  }, [dark]);
+  return (
+    <button type="button" className="btn ghost icon-btn" onClick={() => setDark(!dark)} aria-label="Farbschema wechseln" title="Farbschema wechseln">
+      <Icon name={dark ? 'sun' : 'moon'} />
+    </button>
   );
 }
